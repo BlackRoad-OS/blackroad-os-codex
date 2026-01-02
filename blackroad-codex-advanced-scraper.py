@@ -14,6 +14,8 @@ from datetime import datetime
 import subprocess
 import ast
 import hashlib
+import urllib.request
+import urllib.error
 
 class AdvancedCodexScraper:
     """Advanced scraping capabilities for the Codex."""
@@ -504,14 +506,57 @@ class AdvancedCodexScraper:
             return False
 
     def _get_github_stats(self, repo_url: str) -> Dict:
-        """Get GitHub repository statistics."""
-        # Would use GitHub API here
-        # For now, return placeholders
-        return {
+        """Get GitHub repository statistics using the GitHub API."""
+        default_stats = {
             'stars': 0,
             'forks': 0,
             'last_updated': datetime.now().isoformat()
         }
+
+        try:
+            # Parse owner/repo from URL
+            # Handles: github.com/owner/repo, github.com/owner/repo.git
+            url_path = repo_url.rstrip('/').replace('.git', '')
+            parts = url_path.split('/')
+            if len(parts) < 2:
+                return default_stats
+
+            owner = parts[-2]
+            repo = parts[-1]
+
+            # GitHub API endpoint
+            api_url = f"https://api.github.com/repos/{owner}/{repo}"
+
+            # Create request with User-Agent (required by GitHub API)
+            request = urllib.request.Request(
+                api_url,
+                headers={
+                    'User-Agent': 'BlackRoad-Codex-Scraper/1.0',
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            )
+
+            with urllib.request.urlopen(request, timeout=10) as response:
+                data = json.loads(response.read().decode('utf-8'))
+
+                return {
+                    'stars': data.get('stargazers_count', 0),
+                    'forks': data.get('forks_count', 0),
+                    'last_updated': data.get('updated_at', datetime.now().isoformat())
+                }
+
+        except urllib.error.HTTPError as e:
+            print(f"  ⚠️  GitHub API error ({e.code}): {e.reason}")
+            return default_stats
+        except urllib.error.URLError as e:
+            print(f"  ⚠️  Network error fetching GitHub stats: {e.reason}")
+            return default_stats
+        except json.JSONDecodeError:
+            print(f"  ⚠️  Failed to parse GitHub API response")
+            return default_stats
+        except Exception as e:
+            print(f"  ⚠️  Error fetching GitHub stats: {e}")
+            return default_stats
 
     def _save_github_repo(self, url: str, name: str, path: str, stats: Dict):
         """Save GitHub repo metadata."""
