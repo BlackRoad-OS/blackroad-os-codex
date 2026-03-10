@@ -4,6 +4,8 @@
 
 Universal code indexing, search, and verification system for the entire BlackRoad ecosystem.
 
+> 🌐 **New here?** Open [index.html](index.html) in your browser for a visual portal — no setup needed.
+
 ---
 
 ## 🎯 What is the BlackRoad Codex?
@@ -45,10 +47,7 @@ The BlackRoad Codex is a comprehensive code intelligence system that:
 git clone https://github.com/BlackRoad-OS/blackroad-os-codex.git
 cd blackroad-os-codex
 
-# Install dependencies
-pip install -r requirements.txt
-
-# Set up the Codex
+# Set up the Codex (Python 3.11+ required — no other dependencies)
 ./setup.sh
 ```
 

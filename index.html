@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BlackRoad Codex — The Library of All Code</title>
+  <meta name="description" content="Universal code intelligence for the BlackRoad ecosystem. Search, verify, and explore 8,789 components across 56 repositories." />
+  <style>
+    /* ── BlackRoad Brand ────────────────────────────────── */
+    :root {
+      --hot-pink:     #FF1D6C;
+      --amber:        #F5A623;
+      --electric-blue:#2979FF;
+      --violet:       #9C27B0;
+      --black:        #0A0A0F;
+      --dark:         #12121A;
+      --card:         #1A1A28;
+      --border:       rgba(255,29,108,0.25);
+      --text:         #F0F0FF;
+      --muted:        #8888AA;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Animated Background ───────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 0%, rgba(255,29,108,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 100%, rgba(41,121,255,0.07) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Layout ─────────────────────────────────────────── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Nav ────────────────────────────────────────────── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--hot-pink);
+      text-decoration: none;
+    }
+
+    .nav-logo span { color: var(--text); }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── Hero ───────────────────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 80px 0 60px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,29,108,0.15);
+      border: 1px solid rgba(255,29,108,0.4);
+      color: var(--hot-pink);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 .accent { color: var(--hot-pink); }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+
+    /* ── Buttons ────────────────────────────────────────── */
+    .btn-group {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-primary {
+      background: var(--hot-pink);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-blue {
+      background: var(--electric-blue);
+      color: #fff;
+    }
+
+    /* ── Stats Bar ──────────────────────────────────────── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 60px 0;
+    }
+
+    .stat {
+      background: var(--dark);
+      padding: 24px 20px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--hot-pink);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Section Heading ────────────────────────────────── */
+    .section-heading {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-heading h2 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+    }
+
+    /* ── Cards Grid ─────────────────────────────────────── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 70px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+
+    .card:hover {
+      border-color: var(--hot-pink);
+      transform: translateY(-3px);
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 14px;
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 18px;
+    }
+
+    .card-link {
+      color: var(--hot-pink);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .card-link:hover { text-decoration: underline; }
+
+    /* ── Portal Section ─────────────────────────────────── */
+    .portal-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 60px;
+    }
+
+    .portal-section h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .portal-section > p {
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .portal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .portal-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      padding: 20px;
+      background: var(--dark);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .portal-btn:hover {
+      border-color: var(--hot-pink);
+      background: rgba(255,29,108,0.05);
+    }
+
+    .portal-btn .portal-icon { font-size: 1.6rem; }
+
+    .portal-btn .portal-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .portal-btn .portal-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* ── Quick Start ────────────────────────────────────── */
+    .quickstart {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 60px;
+    }
+
+    .quickstart h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 24px;
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--hot-pink);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .step-content h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .step-content p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 8px;
+    }
+
+    code {
+      background: rgba(255,29,108,0.1);
+      border: 1px solid rgba(255,29,108,0.2);
+      padding: 2px 8px;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      font-family: 'Fira Code', 'Cascadia Code', monospace;
+      color: var(--amber);
+    }
+
+    pre {
+      background: #0D0D15;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      font-family: 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.85rem;
+      color: var(--amber);
+      line-height: 1.7;
+    }
+
+    /* ── Footer ─────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    footer a { color: var(--hot-pink); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ─────────────────────────────────────── */
+    @media (max-width: 600px) {
+      nav { flex-direction: column; gap: 14px; }
+      .nav-links { gap: 16px; }
+      .hero { padding: 50px 0 40px; }
+      .portal-section, .quickstart { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ── Nav ─────────────────────────────────────────────── -->
+  <nav>
+    <a class="nav-logo" href="https://github.com/BlackRoad-OS">
+      🖤 BlackRoad <span>Codex</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="https://github.com/BlackRoad-OS/blackroad-os-codex">GitHub</a></li>
+      <li><a href="https://github.com/BlackRoad-OS/blackroad-os-codex/issues">Issues</a></li>
+      <li><a href="https://github.com/BlackRoad-OS">Org</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Hero ────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-badge">✨ Open Source · Universal · Visual</div>
+    <h1>The Library of<br /><span class="accent">All BlackRoad Code</span></h1>
+    <p>
+      One place to search, verify, and understand 8,789 components across 56 repositories.
+      No terminal required&nbsp;— just click and explore.
+    </p>
+    <div class="btn-group">
+      <a class="btn btn-primary" href="https://github.com/BlackRoad-OS/blackroad-os-codex">
+        📜 View on GitHub
+      </a>
+      <a class="btn btn-blue" href="https://github.com/BlackRoad-OS">
+        🌐 BlackRoad-OS Org
+      </a>
+      <a class="btn btn-secondary" href="https://github.com/BlackRoad-OS/blackroad-os-codex/issues/new">
+        💬 Open Issue
+      </a>
+    </div>
+  </section>
+
+  <!-- ── Stats ───────────────────────────────────────────── -->
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat-number">56</span>
+      <span class="stat-label">Repositories</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">8,789</span>
+      <span class="stat-label">Components</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">76</span>
+      <span class="stat-label">Math Identities</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">2</span>
+      <span class="stat-label">Languages</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">100%</span>
+      <span class="stat-label">Open Source</span>
+    </div>
+  </div>
+
+  <!-- ── Portals ──────────────────────────────────────────── -->
+  <div class="portal-section">
+    <h2>🚀 Jump In Instantly</h2>
+    <p>Click any link below — no setup, no terminal, no fuss.</p>
+    <div class="portal-grid">
+
+      <a class="portal-btn" href="https://github.com/BlackRoad-OS/blackroad-os-codex">
+        <span class="portal-icon">📜</span>
+        <span class="portal-title">Source Code</span>
+        <span class="portal-desc">Browse every file in the Codex</span>
+      </a>
+
+      <a class="portal-btn" href="https://github.com/BlackRoad-OS/blackroad-os-codex/issues">
+        <span class="portal-icon">🐛</span>
+        <span class="portal-title">Report a Bug</span>
+        <span class="portal-desc">Something broken? Tell us here</span>
+      </a>
+
+      <a class="portal-btn" href="https://github.com/BlackRoad-OS/blackroad-os-codex/discussions">
+        <span class="portal-icon">💬</span>
+        <span class="portal-title">Discussions</span>
+        <span class="portal-desc">Ask questions, share ideas</span>
+      </a>
+
+      <a class="portal-btn" href="https://github.com/BlackRoad-OS">
+        <span class="portal-icon">🌐</span>
+        <span class="portal-title">BlackRoad OS Org</span>
+        <span class="portal-desc">All 56+ repos in one place</span>
+      </a>
+
+      <a class="portal-btn" href="https://github.com/BlackRoad-OS/blackroad-os-codex/blob/master/README.md">
+        <span class="portal-icon">📚</span>
+        <span class="portal-title">Documentation</span>
+        <span class="portal-desc">Full guide &amp; reference</span>
+      </a>
+
+      <a class="portal-btn" href="https://github.com/BlackRoad-OS/blackroad-os-codex/blob/master/CONTRIBUTING.md">
+        <span class="portal-icon">🤝</span>
+        <span class="portal-title">Contribute</span>
+        <span class="portal-desc">Help make the Codex better</span>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ── What Can It Do ───────────────────────────────────── -->
+  <div class="section-heading">
+    <h2>What Does the Codex Do?</h2>
+    <p>Three superpowers — zero complexity.</p>
+  </div>
+
+  <div class="cards-grid">
+
+    <div class="card">
+      <div class="card-icon">🔍</div>
+      <h3>Search Any Code</h3>
+      <p>Type what you need — "login button", "API endpoint", "math formula" — and instantly find matching code across all 56 repos.</p>
+      <a class="card-link" href="https://github.com/BlackRoad-OS/blackroad-os-codex/blob/master/blackroad-codex-search.py">View Search Tool →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">✅</div>
+      <h3>Verify Correctness</h3>
+      <p>The Codex automatically checks math formulas, type signatures, and logic rules — so your code does exactly what it says.</p>
+      <a class="card-link" href="https://github.com/BlackRoad-OS/blackroad-os-codex/blob/master/docs/CODEX_VERIFICATION_GUIDE.md">Verification Guide →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <h3>Visualise the Ecosystem</h3>
+      <p>See every repository, component, and dependency at a glance. Spot gaps, avoid duplicate work, stay coordinated.</p>
+      <a class="card-link" href="https://github.com/BlackRoad-OS/blackroad-os-codex/blob/master/blackroad-codex-scraping-dashboard.py">Dashboard Script →</a>
+    </div>
+
+  </div>
+
+  <!-- ── Quick Start ───────────────────────────────────────── -->
+  <div class="quickstart">
+    <h2>⚡ 3-Step Quick Start</h2>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Clone &amp; Install</h4>
+          <p>Requires Python 3.11+ — that's all.</p>
+          <pre>git clone https://github.com/BlackRoad-OS/blackroad-os-codex.git
+cd blackroad-os-codex
+./setup.sh</pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Search for Code</h4>
+          <p>Find anything across all BlackRoad repos instantly.</p>
+          <pre>python3 blackroad-codex-search.py "authentication jwt"</pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Run the Dashboard</h4>
+          <p>See the full ecosystem stats live in your terminal.</p>
+          <pre>python3 blackroad-codex-scraping-dashboard.py</pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Top Repos ─────────────────────────────────────────── -->
+  <div class="section-heading">
+    <h2>🏆 Top Repositories</h2>
+    <p>The most component-rich repos in the ecosystem.</p>
+  </div>
+
+  <div class="cards-grid">
+
+    <div class="card">
+      <div class="card-icon">🚀</div>
+      <h3>blackroad-simple-launch</h3>
+      <p>7,044 components — the largest repo in the ecosystem.</p>
+      <a class="card-link" href="https://github.com/BlackRoad-OS/blackroad-simple-launch">Open Repo →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🖥️</div>
+      <h3>BlackRoad-Operating-System</h3>
+      <p>1,379 components — the core OS layer.</p>
+      <a class="card-link" href="https://github.com/BlackRoad-OS/BlackRoad-Operating-System">Open Repo →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🌍</div>
+      <h3>earth-metaverse</h3>
+      <p>387 components — immersive world-building tools.</p>
+      <a class="card-link" href="https://github.com/BlackRoad-OS/earth-metaverse">Open Repo →</a>
+    </div>
+
+  </div>
+
+</div><!-- /container -->
+
+<!-- ── Footer ────────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <p>
+      © 2025–2026 <a href="https://github.com/BlackRoad-OS">BlackRoad OS, Inc.</a> · 
+      CEO: Alexa Amundson · 
+      <a href="mailto:blackroad.systems@gmail.com">blackroad.systems@gmail.com</a> ·
+      <a href="https://github.com/BlackRoad-OS/blackroad-os-codex/blob/master/LICENSE">MIT License</a>
+    </p>
+    <p style="margin-top:8px; color: #555580;">
+      The Codex remembers. The Codex verifies. The Codex knows all. 📜
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
